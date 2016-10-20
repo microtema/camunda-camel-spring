@@ -14,7 +14,7 @@ import java.util.List;
 
 
 @Component
-public class CalculateInterestService implements JavaDelegate {
+public class ReadPurchaseOrderService implements JavaDelegate {
 
 
     @Inject

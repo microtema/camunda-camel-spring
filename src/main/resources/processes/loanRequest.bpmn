@@ -3,7 +3,7 @@
   <bpmn:process id="loanRequest" processType="None" isClosed="false" isExecutable="true">
     <bpmn:startEvent id="StartEvent_1" name="Loan Request Received" />
     <bpmn:endEvent id="EndEvent_1y4bj2w" name="Loan Approved" />
-    <bpmn:serviceTask id="receive_message" name="ServiceTask" camunda:delegateExpression="${calculateInterestService}" activiti:delegateExpression="${calculateInterestService }" activiti:exclusive="true">
+    <bpmn:serviceTask id="read-purchase-order-flatfile" name="ServiceTask" camunda:delegateExpression="${readPurchaseOrderService}" activiti:delegateExpression="${calculateInterestService }" activiti:exclusive="true">
       <bpmn:extensionElements>
         <camunda:inputOutput>
           <camunda:inputParameter name="inputFileName">purchase-order.csv</camunda:inputParameter>
@@ -26,8 +26,8 @@
         </camunda:inputOutput>
       </bpmn:extensionElements>
     </bpmn:serviceTask>
-    <bpmn:sequenceFlow id="_4" sourceRef="StartEvent_1" targetRef="receive_message" />
-    <bpmn:sequenceFlow id="_5" sourceRef="receive_message" targetRef="EndEvent_1y4bj2w" />
+    <bpmn:sequenceFlow id="_4" sourceRef="StartEvent_1" targetRef="read-purchase-order-flatfile" />
+    <bpmn:sequenceFlow id="_5" sourceRef="read-purchase-order-flatfile" targetRef="EndEvent_1y4bj2w" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="Diagram-_1" name="New Diagram" documentation="background=#FFFFFF;count=1;horizontalcount=1;orientation=0;width=842.4;height=1195.2;imageableWidth=832.4;imageableHeight=1185.2;imageableX=5.0;imageableY=5.0">
     <bpmndi:BPMNPlane bpmnElement="loanRequest">
@@ -43,20 +43,20 @@
           <dc:Bounds x="335" y="206" width="75" height="13" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Shape-_3" bpmnElement="receive_message">
+      <bpmndi:BPMNShape id="Shape-_3" bpmnElement="read-purchase-order-flatfile">
         <dc:Bounds x="101" y="150" width="85" height="55" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="0" y="0" width="85" height="55" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="BPMNEdge__4" bpmnElement="_4" sourceElement="StartEvent_1" targetElement="receive_message">
+      <bpmndi:BPMNEdge id="BPMNEdge__4" bpmnElement="_4" sourceElement="StartEvent_1" targetElement="read-purchase-order-flatfile">
         <di:waypoint xsi:type="dc:Point" x="57" y="176" />
         <di:waypoint xsi:type="dc:Point" x="101" y="176" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="79" y="161" width="0" height="0" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge__5" bpmnElement="_5" sourceElement="receive_message" targetElement="EndEvent_1y4bj2w">
+      <bpmndi:BPMNEdge id="BPMNEdge__5" bpmnElement="_5" sourceElement="read-purchase-order-flatfile" targetElement="EndEvent_1y4bj2w">
         <di:waypoint xsi:type="dc:Point" x="186" y="176" />
         <di:waypoint xsi:type="dc:Point" x="355" y="176" />
         <bpmndi:BPMNLabel>

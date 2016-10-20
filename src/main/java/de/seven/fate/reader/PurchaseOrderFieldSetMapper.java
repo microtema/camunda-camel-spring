@@ -1,33 +1,33 @@
 package de.seven.fate.reader;
 
-import de.seven.fate.model.PurchaseOrder;
+import de.seven.fate.dto.PurchaseOrderDTO;
 import org.springframework.batch.item.file.mapping.FieldSetMapper;
 import org.springframework.batch.item.file.transform.FieldSet;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BindException;
 
 @Component
-public class PurchaseOrderFieldSetMapper implements FieldSetMapper<PurchaseOrder> {
+public class PurchaseOrderFieldSetMapper implements FieldSetMapper<PurchaseOrderDTO> {
 
     @Override
-    public PurchaseOrder mapFieldSet(FieldSet fieldSet) throws BindException {
+    public PurchaseOrderDTO mapFieldSet(FieldSet fieldSet) throws BindException {
         if (fieldSet == null) {
             return null;
         }
 
-        PurchaseOrder purchaseOrder = new PurchaseOrder();
+        PurchaseOrderDTO purchaseOrderDTO = new PurchaseOrderDTO();
 
-        purchaseOrder.setOrderNumber(fieldSet.readString("ORDER_NUMBER"));
+        purchaseOrderDTO.setOrderNumber(fieldSet.readString("ORDER_NUMBER"));
 
-        purchaseOrder.setAddresName(fieldSet.readString("ADDRESS_NAME"));
-        purchaseOrder.setAddresEmail(fieldSet.readString("ADDRESS_EMAIL"));
+        purchaseOrderDTO.setAddresName(fieldSet.readString("ADDRESS_NAME"));
+        purchaseOrderDTO.setAddresEmail(fieldSet.readString("ADDRESS_EMAIL"));
 
-        purchaseOrder.setItemNumber(fieldSet.readString("ITEM_NUMBER"));
-        purchaseOrder.setItemProductName(fieldSet.readString("ITEM_PRODUCT_NAME"));
-        purchaseOrder.setItemQuatity(fieldSet.readInt("ITEM_QUANTITY"));
-        purchaseOrder.setItemPrice(fieldSet.readBigDecimal("ITEM_PRICE"));
-        purchaseOrder.setItemGiftWrap(fieldSet.readBoolean("ITEM_GIFT_WRAP"));
+        purchaseOrderDTO.setItemNumber(fieldSet.readString("ITEM_NUMBER"));
+        purchaseOrderDTO.setItemProductName(fieldSet.readString("ITEM_PRODUCT_NAME"));
+        purchaseOrderDTO.setItemQuatity(fieldSet.readInt("ITEM_QUANTITY"));
+        purchaseOrderDTO.setItemPrice(fieldSet.readBigDecimal("ITEM_PRICE"));
+        purchaseOrderDTO.setItemGiftWrap(fieldSet.readBoolean("ITEM_GIFT_WRAP"));
 
-        return purchaseOrder;
+        return purchaseOrderDTO;
     }
 }

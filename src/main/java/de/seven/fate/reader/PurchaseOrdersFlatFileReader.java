@@ -1,6 +1,6 @@
 package de.seven.fate.reader;
 
-import de.seven.fate.model.PurchaseOrder;
+import de.seven.fate.dto.PurchaseOrderDTO;
 import org.springframework.batch.item.ExecutionContext;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.core.io.Resource;
@@ -12,13 +12,13 @@ import java.util.List;
 @Component
 public class PurchaseOrdersFlatFileReader {
 
-    private final FlatFileItemReader<PurchaseOrder> itemReader;
-    
+    private final FlatFileItemReader<PurchaseOrderDTO> itemReader;
+
     public PurchaseOrdersFlatFileReader(PurchaseOrderFlatFileReader purchaseOrderFlatFileReader) {
         this.itemReader = purchaseOrderFlatFileReader;
     }
 
-    public List<PurchaseOrder> readAll(Resource resource) {
+    public List<PurchaseOrderDTO> readAll(Resource resource) {
 
         itemReader.setResource(resource);
 
@@ -27,20 +27,19 @@ public class PurchaseOrdersFlatFileReader {
         try {
             return readPurchaseOrders();
         } catch (Exception e) {
-
-            itemReader.close();
-
             throw new IllegalStateException(e);
+        } finally {
+            itemReader.close();
         }
     }
 
-    private List<PurchaseOrder> readPurchaseOrders() throws Exception {
-        PurchaseOrder purchaseOrder;
+    private List<PurchaseOrderDTO> readPurchaseOrders() throws Exception {
+        PurchaseOrderDTO purchaseOrderDTO;
 
-        List<PurchaseOrder> list = new ArrayList<>();
+        List<PurchaseOrderDTO> list = new ArrayList<>();
 
-        while ((purchaseOrder = itemReader.read()) != null) {
-            list.add(purchaseOrder);
+        while ((purchaseOrderDTO = itemReader.read()) != null) {
+            list.add(purchaseOrderDTO);
         }
 
         return list;

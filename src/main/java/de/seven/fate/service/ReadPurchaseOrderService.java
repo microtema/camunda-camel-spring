@@ -1,8 +1,9 @@
 package de.seven.fate.service;
 
 
-import de.seven.fate.model.PurchaseOrder;
+import de.seven.fate.dto.PurchaseOrderDTO;
 import de.seven.fate.reader.PurchaseOrdersFlatFileReader;
+import lombok.extern.java.Log;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.springframework.core.io.Resource;
@@ -12,7 +13,7 @@ import org.springframework.stereotype.Component;
 import javax.inject.Inject;
 import java.util.List;
 
-
+@Log
 @Component
 public class ReadPurchaseOrderService implements JavaDelegate {
 
@@ -31,9 +32,9 @@ public class ReadPurchaseOrderService implements JavaDelegate {
 
         Resource resource = resourceLoader.getResource("classpath:/purchaseOrders/" + inputFileName);
 
-        List<PurchaseOrder> purchaseOrders = ordersFlatFileReader.readAll(resource);
+        List<PurchaseOrderDTO> purchaseOrders = ordersFlatFileReader.readAll(resource);
 
-        System.out.println("get resource" + purchaseOrders);
+        log.info("Read purchase Orders: " + purchaseOrders.size());
 
         delegateExecution.setVariable("purchaseOrders", purchaseOrders);
     }

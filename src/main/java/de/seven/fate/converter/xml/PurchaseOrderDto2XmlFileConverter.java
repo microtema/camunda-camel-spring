@@ -1,6 +1,7 @@
-package de.seven.fate.converter;
+package de.seven.fate.converter.xml;
 
 import de.seven.fate.common.service.JAXBContextService;
+import de.seven.fate.converter.AbstractMetaConverter;
 import de.seven.fate.dto.PurchaseOrderDto;
 import org.apache.camel.util.FileUtil;
 import org.springframework.stereotype.Component;

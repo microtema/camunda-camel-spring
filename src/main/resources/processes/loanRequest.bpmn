@@ -4,6 +4,8 @@
     <bpmn:startEvent id="StartEvent_1" name="Loan Request Received" />
     <bpmn:endEvent id="EndEvent_1y4bj2w" name="Loan Approved">
       <bpmn:incoming>SequenceFlow_1m4w9m0</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_01eiixc</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_142jb13</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:serviceTask id="read-purchase-order-flatfile" name="Read Purchase Orders" camunda:delegateExpression="${readPurchaseOrderService}" activiti:delegateExpression="${calculateInterestService }" activiti:exclusive="true">
       <bpmn:extensionElements>
@@ -34,9 +36,11 @@
     <bpmn:serviceTask id="aggregate-purchase-order" name="Purchase Order Aggregator" camunda:delegateExpression="${purchaseOrderAggregator}">
       <bpmn:incoming>_5</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1eow7wf</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_0wxeij9</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_1gz0a3s</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:sequenceFlow id="SequenceFlow_1m4w9m0" sourceRef="write-purchase-order-xml" targetRef="EndEvent_1y4bj2w" />
-    <bpmn:serviceTask id="write-purchase-order-xml" name="Write Purchase Orders" camunda:delegateExpression="${writePurchaseOrderService}">
+    <bpmn:serviceTask id="write-purchase-order-xml" name="Write Purchase Orders as XML" camunda:delegateExpression="${writePurchaseOrderService}">
       <bpmn:extensionElements>
         <camunda:inputOutput>
           <camunda:inputParameter name="outputDir">c://data/output</camunda:inputParameter>
@@ -44,6 +48,28 @@
       </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_1eow7wf</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1m4w9m0</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_0wxeij9" sourceRef="aggregate-purchase-order" targetRef="write-purchase-order-json" />
+    <bpmn:sequenceFlow id="SequenceFlow_01eiixc" sourceRef="write-purchase-order-json" targetRef="EndEvent_1y4bj2w" />
+    <bpmn:serviceTask id="write-purchase-order-json" name="Write Purchase Orders as JSON" camunda:delegateExpression="${jsonWritePurchaseOrderService}">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="outputDir">c://data/output</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_0wxeij9</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_01eiixc</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_1gz0a3s" sourceRef="aggregate-purchase-order" targetRef="write-purchase-order-yaml" />
+    <bpmn:sequenceFlow id="SequenceFlow_142jb13" sourceRef="write-purchase-order-yaml" targetRef="EndEvent_1y4bj2w" />
+    <bpmn:serviceTask id="write-purchase-order-yaml" name="Write Purchase Orders as Yaml" camunda:delegateExpression="${yamlWritePurchaseOrderService}">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="outputDir">c://data/output</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_1gz0a3s</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_142jb13</bpmn:outgoing>
     </bpmn:serviceTask>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="Diagram-_1" name="New Diagram" documentation="background=#FFFFFF;count=1;horizontalcount=1;orientation=0;width=842.4;height=1195.2;imageableWidth=832.4;imageableHeight=1185.2;imageableX=5.0;imageableY=5.0">
@@ -55,9 +81,9 @@
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Shape-EndEvent_1y4bj2w" bpmnElement="EndEvent_1y4bj2w">
-        <dc:Bounds x="560" y="159" width="32" height="32" />
+        <dc:Bounds x="721" y="159" width="32" height="32" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="542" y="206" width="75" height="13" />
+          <dc:Bounds x="705" y="206" width="75" height="13" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Shape-_3" bpmnElement="read-purchase-order-flatfile">
@@ -82,22 +108,64 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_1eow7wf_di" bpmnElement="SequenceFlow_1eow7wf">
         <di:waypoint xsi:type="dc:Point" x="318" y="175" />
-        <di:waypoint xsi:type="dc:Point" x="390" y="175" />
+        <di:waypoint xsi:type="dc:Point" x="354" y="175" />
+        <di:waypoint xsi:type="dc:Point" x="354" y="70" />
+        <di:waypoint xsi:type="dc:Point" x="390" y="70" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="354" y="160" width="0" height="0" />
+          <dc:Bounds x="369" y="122.5" width="0" height="0" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="ServiceTask_1cq1322_di" bpmnElement="aggregate-purchase-order">
         <dc:Bounds x="218" y="135" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_1m4w9m0_di" bpmnElement="SequenceFlow_1m4w9m0">
-        <di:waypoint xsi:type="dc:Point" x="490" y="175" />
-        <di:waypoint xsi:type="dc:Point" x="560" y="176" />
+        <di:waypoint xsi:type="dc:Point" x="490" y="69" />
+        <di:waypoint xsi:type="dc:Point" x="518" y="69" />
+        <di:waypoint xsi:type="dc:Point" x="518" y="176" />
+        <di:waypoint xsi:type="dc:Point" x="721" y="176" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="525" y="160.5" width="0" height="0" />
+          <dc:Bounds x="533" y="122.5" width="0" height="0" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="ServiceTask_04zygo6_di" bpmnElement="write-purchase-order-xml">
+        <dc:Bounds x="390" y="30" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0wxeij9_di" bpmnElement="SequenceFlow_0wxeij9">
+        <di:waypoint xsi:type="dc:Point" x="318" y="175" />
+        <di:waypoint xsi:type="dc:Point" x="354" y="175" />
+        <di:waypoint xsi:type="dc:Point" x="354" y="287" />
+        <di:waypoint xsi:type="dc:Point" x="390" y="287" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="369" y="231" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_01eiixc_di" bpmnElement="SequenceFlow_01eiixc">
+        <di:waypoint xsi:type="dc:Point" x="490" y="287" />
+        <di:waypoint xsi:type="dc:Point" x="517" y="287" />
+        <di:waypoint xsi:type="dc:Point" x="517" y="175" />
+        <di:waypoint xsi:type="dc:Point" x="721" y="175" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="532" y="231" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_1jf6vpw_di" bpmnElement="write-purchase-order-json">
+        <dc:Bounds x="390" y="247" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1gz0a3s_di" bpmnElement="SequenceFlow_1gz0a3s">
+        <di:waypoint xsi:type="dc:Point" x="318" y="175" />
+        <di:waypoint xsi:type="dc:Point" x="390" y="175" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="354" y="160" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_142jb13_di" bpmnElement="SequenceFlow_142jb13">
+        <di:waypoint xsi:type="dc:Point" x="490" y="175" />
+        <di:waypoint xsi:type="dc:Point" x="721" y="175" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="606" y="160" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_01n0i2r_di" bpmnElement="write-purchase-order-yaml">
         <dc:Bounds x="390" y="135" width="100" height="80" />
       </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>

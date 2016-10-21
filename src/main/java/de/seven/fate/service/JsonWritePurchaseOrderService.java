@@ -2,7 +2,7 @@ package de.seven.fate.service;
 
 
 import de.seven.fate.converter.Converter;
-import de.seven.fate.converter.xml.PurchaseOrderDto2XmlFileConverter;
+import de.seven.fate.converter.json.PurchaseOrderDto2JsonFileConverter;
 import de.seven.fate.dto.PurchaseOrderDto;
 import de.seven.fate.model.PurchaseOrder;
 import lombok.extern.java.Log;
@@ -16,11 +16,11 @@ import java.util.List;
 
 @Log
 @Component
-public class WritePurchaseOrderService implements JavaDelegate {
+public class JsonWritePurchaseOrderService implements JavaDelegate {
 
 
     @Inject
-    private PurchaseOrderDto2XmlFileConverter purchaseOrderDto2XmlFileConverter;
+    private PurchaseOrderDto2JsonFileConverter purchaseOrderDto2JsonFileConverter;
 
     @Inject
     private Converter<PurchaseOrderDto, PurchaseOrder> purchaseOrder2PurchaseOrderDtoConverter;
@@ -35,9 +35,9 @@ public class WritePurchaseOrderService implements JavaDelegate {
 
         List<PurchaseOrderDto> purchaseOrderDtos = purchaseOrder2PurchaseOrderDtoConverter.convertList((List<PurchaseOrder>) purchaseOrders);
 
-        List<File> files = purchaseOrderDto2XmlFileConverter.convertList(purchaseOrderDtos, outputDir);
+        List<File> files = purchaseOrderDto2JsonFileConverter.convertList(purchaseOrderDtos, outputDir);
 
-        files.stream().forEach(file -> log.info("Write xml-file to: " + file));
+        files.stream().forEach(file -> log.info("Write Json-File to: " + file));
     }
 }
 

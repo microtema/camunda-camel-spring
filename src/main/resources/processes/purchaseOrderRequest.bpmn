@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:activiti="http://activiti.org/bpmn" xmlns:tns="http://bpmn.io/schema/bpmn" xmlns:xsd="http://www.w3.org/2001/XMLSchema" id="Definitions_1" name="" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.3.2">
+  <bpmn:process id="purchaseOrderRequest" processType="None" isClosed="false" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1" name="Purchase Order Request Received" />
+    <bpmn:endEvent id="EndEvent_1y4bj2w" name="Purchase Order Approved">
+      <bpmn:incoming>SequenceFlow_0l19uvy</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_03h6q37</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:serviceTask id="read-purchase-order-flatfile" name="Read Purchase Orders" camunda:delegateExpression="${readPurchaseOrderService}" activiti:delegateExpression="${calculateInterestService }" activiti:exclusive="true">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="inputFileName">purchase-order.csv</camunda:inputParameter>
+          <camunda:inputParameter name="fileName">messages.xml</camunda:inputParameter>
+          <camunda:inputParameter name="input_map">
+            <camunda:map>
+              <camunda:entry key="fileName">foo.bar</camunda:entry>
+            </camunda:map>
+          </camunda:inputParameter>
+          <camunda:inputParameter name="Input_List">
+            <camunda:list>
+              <camunda:value>one</camunda:value>
+              <camunda:value>0</camunda:value>
+              <camunda:value>true</camunda:value>
+              <camunda:value>java.lang.String</camunda:value>
+              <camunda:value>null</camunda:value>
+            </camunda:list>
+          </camunda:inputParameter>
+          <camunda:outputParameter name="endpoint_output">seda:outputFile</camunda:outputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="_4" sourceRef="StartEvent_1" targetRef="read-purchase-order-flatfile" />
+    <bpmn:sequenceFlow id="_5" sourceRef="read-purchase-order-flatfile" targetRef="aggregate-purchase-order" />
+    <bpmn:serviceTask id="aggregate-purchase-order" name="Purchase Order Aggregator" camunda:delegateExpression="${purchaseOrderAggregator}">
+      <bpmn:incoming>_5</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_to_xor_gateway</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_1m4w9m0" sourceRef="write-purchase-order-xml" targetRef="ExclusiveGateway_16bes6l" />
+    <bpmn:serviceTask id="write-purchase-order-xml" name="Write Purchase Orders as XML" camunda:delegateExpression="${writePurchaseOrderService}">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="outputDir">c://data/output</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_0y4tmwt</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1m4w9m0</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="write-purchase-order-json" name="Write Purchase Orders as JSON" camunda:delegateExpression="${jsonWritePurchaseOrderService}">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="outputDir">c://data/output</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_0sssci5</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0sw2zkd</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="write-purchase-order-yaml" name="Write Purchase Orders as Yaml" camunda:delegateExpression="${yamlWritePurchaseOrderService}">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="outputDir">c://data/output</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_0hs1s0d</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1e7vzs8</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:parallelGateway id="ExclusiveGateway_0jmlxck" name="Paralell">
+      <bpmn:incoming>SequenceFlow_12cagqz</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0y4tmwt</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_0hs1s0d</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_0sssci5</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    <bpmn:sequenceFlow id="SequenceFlow_to_xor_gateway" sourceRef="aggregate-purchase-order" targetRef="ExclusiveGateway_0czb4gw" />
+    <bpmn:sequenceFlow id="SequenceFlow_0y4tmwt" sourceRef="ExclusiveGateway_0jmlxck" targetRef="write-purchase-order-xml" />
+    <bpmn:sequenceFlow id="SequenceFlow_0hs1s0d" sourceRef="ExclusiveGateway_0jmlxck" targetRef="write-purchase-order-yaml" />
+    <bpmn:sequenceFlow id="SequenceFlow_0sssci5" sourceRef="ExclusiveGateway_0jmlxck" targetRef="write-purchase-order-json" />
+    <bpmn:inclusiveGateway id="ExclusiveGateway_16bes6l" name="Inclusive">
+      <bpmn:incoming>SequenceFlow_1m4w9m0</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_1e7vzs8</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_0sw2zkd</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0l19uvy</bpmn:outgoing>
+    </bpmn:inclusiveGateway>
+    <bpmn:sequenceFlow id="SequenceFlow_1e7vzs8" sourceRef="write-purchase-order-yaml" targetRef="ExclusiveGateway_16bes6l" />
+    <bpmn:sequenceFlow id="SequenceFlow_0sw2zkd" sourceRef="write-purchase-order-json" targetRef="ExclusiveGateway_16bes6l" />
+    <bpmn:sequenceFlow id="SequenceFlow_0l19uvy" sourceRef="ExclusiveGateway_16bes6l" targetRef="EndEvent_1y4bj2w" />
+    <bpmn:exclusiveGateway id="ExclusiveGateway_0czb4gw" name="Purchase Order Validation" default="SequenceFlow_03h6q37">
+      <bpmn:incoming>SequenceFlow_to_xor_gateway</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_12cagqz</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_03h6q37</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="SequenceFlow_12cagqz" name="Yes" sourceRef="ExclusiveGateway_0czb4gw" targetRef="ExclusiveGateway_0jmlxck">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${!purchaseOrders.isEmpty()}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_03h6q37" name="No" sourceRef="ExclusiveGateway_0czb4gw" targetRef="EndEvent_1y4bj2w" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="Diagram-_1" name="New Diagram" documentation="background=#FFFFFF;count=1;horizontalcount=1;orientation=0;width=842.4;height=1195.2;imageableWidth=832.4;imageableHeight=1185.2;imageableX=5.0;imageableY=5.0">
+    <bpmndi:BPMNPlane bpmnElement="purchaseOrderRequest">
+      <bpmndi:BPMNShape id="Shape-StartEvent_1" bpmnElement="StartEvent_1">
+        <dc:Bounds x="-51" y="159" width="32" height="32" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="-80" y="203" width="90" height="25" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape-EndEvent_1y4bj2w" bpmnElement="EndEvent_1y4bj2w">
+        <dc:Bounds x="805" y="159" width="32" height="32" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="855" y="162" width="81" height="25" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape-_3" bpmnElement="read-purchase-order-flatfile">
+        <dc:Bounds x="21" y="147" width="85" height="55" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="0" y="0" width="85" height="55" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge__4" bpmnElement="_4" sourceElement="StartEvent_1" targetElement="read-purchase-order-flatfile">
+        <di:waypoint xsi:type="dc:Point" x="-19" y="173" />
+        <di:waypoint xsi:type="dc:Point" x="21" y="173" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1" y="158" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge__5" bpmnElement="_5" sourceElement="read-purchase-order-flatfile" targetElement="EndEvent_1y4bj2w">
+        <di:waypoint xsi:type="dc:Point" x="106" y="174" />
+        <di:waypoint xsi:type="dc:Point" x="140" y="174" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="123" y="159" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_1cq1322_di" bpmnElement="aggregate-purchase-order">
+        <dc:Bounds x="140" y="135" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1m4w9m0_di" bpmnElement="SequenceFlow_1m4w9m0">
+        <di:waypoint xsi:type="dc:Point" x="642" y="69" />
+        <di:waypoint xsi:type="dc:Point" x="722" y="69" />
+        <di:waypoint xsi:type="dc:Point" x="722" y="151" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="682" y="54" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_04zygo6_di" bpmnElement="write-purchase-order-xml">
+        <dc:Bounds x="542" y="30" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_1jf6vpw_di" bpmnElement="write-purchase-order-json">
+        <dc:Bounds x="542" y="247" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_01n0i2r_di" bpmnElement="write-purchase-order-yaml">
+        <dc:Bounds x="542" y="135" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ParallelGateway_0em9csp_di" bpmnElement="ExclusiveGateway_0jmlxck">
+        <dc:Bounds x="432" y="150" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="475" y="137" width="37" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0r7fo2a_di" bpmnElement="SequenceFlow_to_xor_gateway">
+        <di:waypoint xsi:type="dc:Point" x="240" y="175" />
+        <di:waypoint xsi:type="dc:Point" x="313" y="175" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="277" y="160" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0y4tmwt_di" bpmnElement="SequenceFlow_0y4tmwt">
+        <di:waypoint xsi:type="dc:Point" x="457" y="150" />
+        <di:waypoint xsi:type="dc:Point" x="457" y="70" />
+        <di:waypoint xsi:type="dc:Point" x="542" y="70" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="472" y="110" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0hs1s0d_di" bpmnElement="SequenceFlow_0hs1s0d">
+        <di:waypoint xsi:type="dc:Point" x="482" y="175" />
+        <di:waypoint xsi:type="dc:Point" x="542" y="175" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="512" y="160" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0sssci5_di" bpmnElement="SequenceFlow_0sssci5">
+        <di:waypoint xsi:type="dc:Point" x="457" y="200" />
+        <di:waypoint xsi:type="dc:Point" x="457" y="287" />
+        <di:waypoint xsi:type="dc:Point" x="542" y="287" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="472" y="243.5" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="InclusiveGateway_14l12tk_di" bpmnElement="ExclusiveGateway_16bes6l">
+        <dc:Bounds x="698" y="150" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="747" y="146" width="43" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1e7vzs8_di" bpmnElement="SequenceFlow_1e7vzs8">
+        <di:waypoint xsi:type="dc:Point" x="642" y="175" />
+        <di:waypoint xsi:type="dc:Point" x="698" y="175" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="670" y="160" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0sw2zkd_di" bpmnElement="SequenceFlow_0sw2zkd">
+        <di:waypoint xsi:type="dc:Point" x="642" y="287" />
+        <di:waypoint xsi:type="dc:Point" x="723" y="287" />
+        <di:waypoint xsi:type="dc:Point" x="723" y="200" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="683" y="272" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0l19uvy_di" bpmnElement="SequenceFlow_0l19uvy">
+        <di:waypoint xsi:type="dc:Point" x="748" y="175" />
+        <di:waypoint xsi:type="dc:Point" x="805" y="175" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="777" y="160" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ExclusiveGateway_0czb4gw_di" bpmnElement="ExclusiveGateway_0czb4gw" isMarkerVisible="true">
+        <dc:Bounds x="313.219" y="150" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="302" y="112" width="81" height="24" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_12cagqz_di" bpmnElement="SequenceFlow_12cagqz">
+        <di:waypoint xsi:type="dc:Point" x="363" y="175" />
+        <di:waypoint xsi:type="dc:Point" x="432" y="175" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="390" y="150" width="18" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_03h6q37_di" bpmnElement="SequenceFlow_03h6q37">
+        <di:waypoint xsi:type="dc:Point" x="338" y="200" />
+        <di:waypoint xsi:type="dc:Point" x="338" y="402" />
+        <di:waypoint xsi:type="dc:Point" x="821" y="402" />
+        <di:waypoint xsi:type="dc:Point" x="821" y="191" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="578" y="387" width="15" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

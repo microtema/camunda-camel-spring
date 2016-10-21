@@ -14,6 +14,6 @@ public class CamundaProcessService {
 
     @PostConstruct
     public void startProcess() {
-        runtimeService.startProcessInstanceByKey("loanRequest");
+        runtimeService.startProcessInstanceByKey("purchaseOrderRequest");
     }
 }

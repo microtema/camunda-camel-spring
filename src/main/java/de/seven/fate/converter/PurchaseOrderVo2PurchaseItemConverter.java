@@ -1,14 +1,14 @@
 package de.seven.fate.converter;
 
-import de.seven.fate.dto.PurchaseOrderDTO;
 import de.seven.fate.model.PurchaseItem;
+import de.seven.fate.vo.PurchaseOrderVo;
 import org.apache.commons.lang.Validate;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PurchaseOrderDTO2PurchaseItem extends AbstractConverter<PurchaseItem, PurchaseOrderDTO> {
+public class PurchaseOrderVo2PurchaseItemConverter extends AbstractConverter<PurchaseItem, PurchaseOrderVo> {
 
-    public void update(PurchaseItem dest, PurchaseOrderDTO orig) {
+    public void update(PurchaseItem dest, PurchaseOrderVo orig) {
         Validate.notNull(dest);
 
         dest.setPartNumber(orig.getItemNumber());

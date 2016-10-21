@@ -1,8 +1,8 @@
 package de.seven.fate.service;
 
 
-import de.seven.fate.dto.PurchaseOrderDTO;
 import de.seven.fate.reader.PurchaseOrdersFlatFileReader;
+import de.seven.fate.vo.PurchaseOrderVo;
 import lombok.extern.java.Log;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
@@ -32,7 +32,7 @@ public class ReadPurchaseOrderService implements JavaDelegate {
 
         Resource resource = resourceLoader.getResource("classpath:/purchaseOrders/" + inputFileName);
 
-        List<PurchaseOrderDTO> purchaseOrders = ordersFlatFileReader.readAll(resource);
+        List<PurchaseOrderVo> purchaseOrders = ordersFlatFileReader.readAll(resource);
 
         log.info("Read purchase Orders: " + purchaseOrders.size());
 

@@ -10,5 +10,5 @@ public class PurchaseOrder implements Serializable {
 
     private String orderNumber;
     private Address address;
-    private List<PurchaseItem> orders;
+    private List<PurchaseItem> items;
 }

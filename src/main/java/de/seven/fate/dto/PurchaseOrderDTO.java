@@ -2,18 +2,21 @@ package de.seven.fate.dto;
 
 import lombok.Data;
 
+import javax.xml.bind.annotation.*;
 import java.io.Serializable;
-import java.math.BigDecimal;
+import java.util.List;
 
 @Data
-public class PurchaseOrderDTO implements Serializable {
+@XmlRootElement(name = "PurchaseOrder")
+@XmlAccessorType(XmlAccessType.FIELD)
+public class PurchaseOrderDto implements Serializable {
 
+    @XmlAttribute
     private String orderNumber;
-    private String addresName;
-    private String addresEmail;
-    private String itemNumber;
-    private String itemProductName;
-    private Integer itemQuatity;
-    private BigDecimal itemPrice;
-    private Boolean itemGiftWrap;
+
+    private AddressDto address;
+
+    @XmlElement(name = "Items", required = true)
+    private List<PurchaseItemDto> items;
+
 }

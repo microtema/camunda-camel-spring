@@ -1,21 +1,21 @@
 package de.seven.fate.reader;
 
-import de.seven.fate.dto.PurchaseOrderDTO;
+import de.seven.fate.vo.PurchaseOrderVo;
 import org.springframework.batch.item.file.mapping.FieldSetMapper;
 import org.springframework.batch.item.file.transform.FieldSet;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BindException;
 
 @Component
-public class PurchaseOrderFieldSetMapper implements FieldSetMapper<PurchaseOrderDTO> {
+public class PurchaseOrderFieldSetMapper implements FieldSetMapper<PurchaseOrderVo> {
 
     @Override
-    public PurchaseOrderDTO mapFieldSet(FieldSet fieldSet) throws BindException {
+    public PurchaseOrderVo mapFieldSet(FieldSet fieldSet) throws BindException {
         if (fieldSet == null) {
             return null;
         }
 
-        PurchaseOrderDTO purchaseOrderDTO = new PurchaseOrderDTO();
+        PurchaseOrderVo purchaseOrderDTO = new PurchaseOrderVo();
 
         purchaseOrderDTO.setOrderNumber(fieldSet.readString("ORDER_NUMBER"));
 

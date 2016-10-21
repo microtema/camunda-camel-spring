@@ -1,8 +1,8 @@
 package de.seven.fate.service;
 
 import de.seven.fate.converter.Converter;
-import de.seven.fate.dto.PurchaseOrderDTO;
 import de.seven.fate.model.PurchaseOrder;
+import de.seven.fate.vo.PurchaseOrderVo;
 import lombok.extern.java.Log;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
@@ -16,14 +16,14 @@ import java.util.List;
 public class PurchaseOrderAggregator implements JavaDelegate {
 
     @Inject
-    private Converter<List<PurchaseOrder>, List<PurchaseOrderDTO>> purchaseOrderDTOList2PurchaseOrderListConverter;
+    private Converter<List<PurchaseOrder>, List<PurchaseOrderVo>> purchaseOrderDTOList2PurchaseOrderListConverter;
 
     @Override
     public void execute(DelegateExecution delegateExecution) throws Exception {
 
         Object purchaseOrdersObj = delegateExecution.getVariable("purchaseOrders");
 
-        List<PurchaseOrderDTO> orderList = (List<PurchaseOrderDTO>) purchaseOrdersObj;
+        List<PurchaseOrderVo> orderList = (List<PurchaseOrderVo>) purchaseOrdersObj;
 
         List<PurchaseOrder> purchaseOrders = purchaseOrderDTOList2PurchaseOrderListConverter.convert(orderList);
 

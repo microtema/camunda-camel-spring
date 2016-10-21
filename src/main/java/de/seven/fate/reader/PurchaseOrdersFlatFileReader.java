@@ -1,6 +1,6 @@
 package de.seven.fate.reader;
 
-import de.seven.fate.dto.PurchaseOrderDTO;
+import de.seven.fate.vo.PurchaseOrderVo;
 import org.springframework.batch.item.ExecutionContext;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.core.io.Resource;
@@ -12,13 +12,13 @@ import java.util.List;
 @Component
 public class PurchaseOrdersFlatFileReader {
 
-    private final FlatFileItemReader<PurchaseOrderDTO> itemReader;
+    private final FlatFileItemReader<PurchaseOrderVo> itemReader;
 
     public PurchaseOrdersFlatFileReader(PurchaseOrderFlatFileReader purchaseOrderFlatFileReader) {
         this.itemReader = purchaseOrderFlatFileReader;
     }
 
-    public List<PurchaseOrderDTO> readAll(Resource resource) {
+    public List<PurchaseOrderVo> readAll(Resource resource) {
 
         itemReader.setResource(resource);
 
@@ -33,10 +33,10 @@ public class PurchaseOrdersFlatFileReader {
         }
     }
 
-    private List<PurchaseOrderDTO> readPurchaseOrders() throws Exception {
-        PurchaseOrderDTO purchaseOrderDTO;
+    private List<PurchaseOrderVo> readPurchaseOrders() throws Exception {
+        PurchaseOrderVo purchaseOrderDTO;
 
-        List<PurchaseOrderDTO> list = new ArrayList<>();
+        List<PurchaseOrderVo> list = new ArrayList<>();
 
         while ((purchaseOrderDTO = itemReader.read()) != null) {
             list.add(purchaseOrderDTO);

@@ -3,8 +3,10 @@ package de.seven.fate.bpmn;
 import lombok.extern.java.Log;
 import org.camunda.bpm.model.bpmn.Bpmn;
 import org.camunda.bpm.model.bpmn.BpmnModelInstance;
+import org.camunda.bpm.model.bpmn.Query;
 import org.camunda.bpm.model.bpmn.instance.*;
 import org.camunda.bpm.model.xml.Model;
+import org.camunda.bpm.model.xml.ModelInstance;
 import org.camunda.bpm.model.xml.instance.ModelElementInstance;
 import org.camunda.bpm.model.xml.type.ModelElementType;
 import org.springframework.core.io.Resource;
@@ -29,6 +31,8 @@ public class BpmnService {
     @PostConstruct
     private void init() {
 
+        log.info("###########################################################");
+
         BpmnModelInstance bpmnModelInstance = getBpmnModelInstance();
 
         Model model = bpmnModelInstance.getModel();
@@ -36,30 +40,61 @@ public class BpmnService {
 
         List<StartEvent> startEvents = getModelElementsByType(bpmnModelInstance, StartEvent.class);
         startEvents.forEach(startEvent -> {
-            log.info("StartEvent: " + startEvent.getId() + " : " + startEvent.getName());
-        });
 
-        List<EndEvent> endEvents = getModelElementsByType(bpmnModelInstance, EndEvent.class);
-        endEvents.forEach(endEvent -> {
-            log.info("EndEvent: " + endEvent.getId() + " : " + endEvent.getName());
+            Query<FlowNode> succeedingNodes = startEvent.getSucceedingNodes();
+            succeedingNodes.list().forEach(flowNode -> {
+                log.info(" -> flowNode: " + flowNode.getId() + " : " + flowNode.getName());
+            });
+
+            String camundaFormKey = startEvent.getCamundaFormKey();
+            ModelElementType elementType = startEvent.getElementType();
+            ModelInstance modelInstance = startEvent.getModelInstance();
+
+            log.info("StartEvent: " + startEvent.getId() + " : " + startEvent.getName());
         });
 
         List<Task> tasks = getModelElementsByType(bpmnModelInstance, Task.class);
         tasks.forEach(task -> {
+
+            Query<FlowNode> succeedingNodes = task.getSucceedingNodes();
+            succeedingNodes.list().forEach(flowNode -> {
+                log.info(" -> flowNode: " + flowNode.getId() + " : " + flowNode.getName());
+            });
+
             log.info("Task: " + task.getId() + " : " + task.getName());
         });
 
         List<Gateway> gateways = getModelElementsByType(bpmnModelInstance, Gateway.class);
         gateways.forEach(gateway -> {
+
+            Query<FlowNode> succeedingNodes = gateway.getSucceedingNodes();
+            succeedingNodes.list().forEach(flowNode -> {
+                log.info(" -> flowNode: " + flowNode.getId() + " : " + flowNode.getName());
+            });
+
             log.info("Gateway: " + gateway.getId() + " : " + gateway.getName());
         });
 
         List<SequenceFlow> sequenceFlows = getModelElementsByType(bpmnModelInstance, SequenceFlow.class);
         sequenceFlows.forEach(sequenceFlow -> {
+
             ConditionExpression conditionExpression = sequenceFlow.getConditionExpression();
             log.info("SequenceFlow: " + sequenceFlow.getId() + " : " + (conditionExpression != null ? conditionExpression.getType() : ""));
         });
 
+        List<EndEvent> endEvents = getModelElementsByType(bpmnModelInstance, EndEvent.class);
+        endEvents.forEach(endEvent -> {
+
+            Query<FlowNode> succeedingNodes = endEvent.getSucceedingNodes();
+
+            succeedingNodes.list().forEach(flowNode -> {
+                log.info(" -> flowNode: " + flowNode.getId() + " : " + flowNode.getName());
+            });
+
+            log.info("EndEvent: " + endEvent.getId() + " : " + endEvent.getName());
+        });
+
+        log.info("###########################################################");
     }
 
     private BpmnModelInstance getBpmnModelInstance() {

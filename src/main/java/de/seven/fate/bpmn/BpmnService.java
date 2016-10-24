@@ -119,12 +119,66 @@ public class BpmnService {
      * @param <T>           ModelElementInstance Type
      * @return the model elements by type
      */
-    private <T extends ModelElementInstance> List<T> getModelElementsByType(BpmnModelInstance modelInstance, Class<T> type) {
+    public <T extends ModelElementInstance> List<T> getModelElementsByType(BpmnModelInstance modelInstance, Class<T> type) {
 
         ModelElementType modelElementType = modelInstance.getModel().getType(type);
 
         Collection<ModelElementInstance> elementInstances = modelInstance.getModelElementsByType(modelElementType);
 
         return elementInstances.stream().map(elementInstance -> (T) elementInstance).collect(Collectors.toList());
+    }
+
+    /**
+     * Gets the start event of the process.
+     *
+     * @param modelInstance the process model as stream
+     * @return the start event of the process
+     */
+    public StartEvent getStartEvent(BpmnModelInstance modelInstance) {
+
+        return getStartEvents(modelInstance).iterator().next();
+    }
+
+    /**
+     * Gets the start events of the process.
+     *
+     * @param modelInstance the process model as stream
+     * @return the start events of the process
+     */
+    public List<StartEvent> getStartEvents(BpmnModelInstance modelInstance) {
+
+        return getModelElementsByType(modelInstance, StartEvent.class);
+    }
+
+    public List<SequenceFlow> getOutgoingSequenceFlows(FlowNode flowNode) {
+
+        return flowNode.getOutgoing().stream().collect(Collectors.toList());
+    }
+
+    public SequenceFlow getOutgoingSequenceFlow(FlowNode flowNode) {
+
+        return flowNode.getOutgoing().iterator().next();
+    }
+
+    /**
+     * Gets the end event of the process.
+     *
+     * @param modelInstance the process model as stream
+     * @return the start event of the process
+     */
+    public EndEvent getEndEvent(BpmnModelInstance modelInstance) {
+
+        return getEndEvents(modelInstance).iterator().next();
+    }
+
+    /**
+     * Gets the end events of the process.
+     *
+     * @param modelInstance the process model as stream
+     * @return the start events of the process
+     */
+    public List<EndEvent> getEndEvents(BpmnModelInstance modelInstance) {
+
+        return getModelElementsByType(modelInstance, EndEvent.class);
     }
 }

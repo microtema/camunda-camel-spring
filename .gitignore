@@ -23,6 +23,3 @@ dist/
 nbdist/
 .nb-gradle/
 /camunda-camel-spring.iml
-src/main/resources/static/
-src/main/resources/templates/
-src/test/

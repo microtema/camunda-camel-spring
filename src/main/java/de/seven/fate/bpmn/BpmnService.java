@@ -1,6 +1,7 @@
 package de.seven.fate.bpmn;
 
 import lombok.extern.java.Log;
+import org.apache.commons.collections4.CollectionUtils;
 import org.camunda.bpm.model.bpmn.Bpmn;
 import org.camunda.bpm.model.bpmn.BpmnModelInstance;
 import org.camunda.bpm.model.bpmn.Query;
@@ -180,5 +181,26 @@ public class BpmnService {
     public List<EndEvent> getEndEvents(BpmnModelInstance modelInstance) {
 
         return getModelElementsByType(modelInstance, EndEvent.class);
+    }
+
+    public Message getStartEventMessage(StartEvent modelInstance) {
+
+        List<Message> startEventMessages = getStartEventMessages(modelInstance);
+
+        if (CollectionUtils.isEmpty(startEventMessages)) {
+            return null;
+        }
+
+        return startEventMessages.iterator().next();
+    }
+
+    public List<Message> getStartEventMessages(StartEvent modelInstance) {
+
+        Collection<EventDefinition> eventDefinitions = modelInstance.getEventDefinitions();
+
+        return eventDefinitions.stream().map((eventDefinition) -> {
+            MessageEventDefinition messageEventDefinition = (MessageEventDefinition) eventDefinition;
+            return messageEventDefinition.getMessage();
+        }).collect(Collectors.toList());
     }
 }

@@ -8,10 +8,22 @@
     </bpmn:serviceTask>
     <bpmn:sequenceFlow id="SequenceFlow_from_system_task_to_end_event" sourceRef="Task_system_task" targetRef="EndEvent_success" />
     <bpmn:startEvent id="StartEvent_1" name="Message received">
+      <bpmn:extensionElements>
+        <camunda:properties>
+          <camunda:property name="uri" value="file://C:/data/input" />
+          <camunda:property name="id" value="start_id" />
+        </camunda:properties>
+      </bpmn:extensionElements>
       <bpmn:outgoing>SequenceFlow_from_start_to_system_task</bpmn:outgoing>
       <bpmn:messageEventDefinition messageRef="Message_01adhjs" />
     </bpmn:startEvent>
     <bpmn:endEvent id="EndEvent_success" name="Message sended">
+      <bpmn:extensionElements>
+        <camunda:properties>
+          <camunda:property name="uri" value="seda:output" />
+          <camunda:property name="id" value="some id" />
+        </camunda:properties>
+      </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_from_system_task_to_end_event</bpmn:incoming>
       <bpmn:messageEventDefinition messageRef="Message_0nf387b" camunda:expression="${true}" />
     </bpmn:endEvent>

@@ -4,8 +4,6 @@ import de.seven.fate.bpmn.BpmnService;
 import de.seven.fate.converter.AbstractMetaConverter;
 import org.apache.camel.model.RouteDefinition;
 import org.camunda.bpm.model.bpmn.instance.Task;
-import org.camunda.bpm.model.xml.type.ModelElementType;
-import org.camunda.bpm.model.xml.type.attribute.Attribute;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -23,13 +21,8 @@ public class Task2RouteDefinitionConverter extends AbstractMetaConverter<RouteDe
             return null;
         }
 
-        ModelElementType elementType = orig.getElementType();
-
-        Attribute<String> delegateExpression = (Attribute<String>) elementType.getAttribute("delegateExpression");
-
-        String value = delegateExpression.getValue(orig);
-
-        String uri = bindBean(value);
+        String delegateExpression = bpmnService.getDelegateExpression(orig);
+        String uri = bindBean(delegateExpression);
 
         return meta.to(uri);
     }

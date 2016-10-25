@@ -23,11 +23,6 @@ public class EndEvent2RouteDefinitionConverter extends AbstractMetaConverter<Rou
         }
 
         Message message = bpmnService.getEndEventMessage(orig);
-
-        if (message == null) {
-            return null;
-        }
-
         String toUri = message.getName();
 
         return meta.to(toUri);

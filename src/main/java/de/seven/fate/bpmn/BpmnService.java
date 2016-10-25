@@ -2,14 +2,18 @@ package de.seven.fate.bpmn;
 
 import lombok.extern.java.Log;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.camunda.bpm.model.bpmn.Bpmn;
 import org.camunda.bpm.model.bpmn.BpmnModelInstance;
 import org.camunda.bpm.model.bpmn.Query;
 import org.camunda.bpm.model.bpmn.instance.*;
+import org.camunda.bpm.model.bpmn.instance.camunda.CamundaProperties;
+import org.camunda.bpm.model.bpmn.instance.camunda.CamundaProperty;
 import org.camunda.bpm.model.xml.Model;
 import org.camunda.bpm.model.xml.ModelInstance;
 import org.camunda.bpm.model.xml.instance.ModelElementInstance;
 import org.camunda.bpm.model.xml.type.ModelElementType;
+import org.camunda.bpm.model.xml.type.attribute.Attribute;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.stereotype.Service;
@@ -204,7 +208,7 @@ public class BpmnService {
         }).collect(Collectors.toList());
     }
 
-    public List<Message> getEndEventMessages(EndEvent modelInstance) {
+    public List<Message> getEndEventMessages(ThrowEvent modelInstance) {
 
         Collection<EventDefinition> eventDefinitions = modelInstance.getEventDefinitions();
 
@@ -227,5 +231,33 @@ public class BpmnService {
 
     public List<Task> getTasks(BpmnModelInstance modelInstance) {
         return getModelElementsByType(modelInstance, Task.class);
+    }
+
+    public String getExtensionPropertyValue(BaseElement baseElement, String propertyName) {
+
+        ExtensionElements extensionElements = baseElement.getExtensionElements();
+
+        Collection<ModelElementInstance> elements = extensionElements.getElements();
+
+        for (ModelElementInstance modelElementInstance : elements) {
+            CamundaProperties camundaProperties = (CamundaProperties) modelElementInstance;
+
+            for (CamundaProperty camundaProperty : camundaProperties.getCamundaProperties()) {
+                if (StringUtils.equalsIgnoreCase(camundaProperty.getCamundaName(), propertyName)) {
+                    return camundaProperty.getCamundaValue();
+                }
+            }
+        }
+
+        return null;
+    }
+
+    public String getDelegateExpression(Task task) {
+
+        ModelElementType elementType = task.getElementType();
+
+        Attribute<String> delegateExpression = (Attribute<String>) elementType.getAttribute("delegateExpression");
+
+        return delegateExpression.getValue(task);
     }
 }

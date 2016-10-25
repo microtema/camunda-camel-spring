@@ -24,14 +24,9 @@ public class StartEvent2RouteDefinitionConverter extends AbstractMetaConverter<R
         }
 
         Message message = bpmnService.getStartEventMessage(orig);
+        String uri = message.getName();
 
-        if (message == null) {
-            return null;
-        }
-
-        String fromUri = message.getName();
-
-        return meta.from(fromUri);
+        return meta.from(uri);
     }
 
 }

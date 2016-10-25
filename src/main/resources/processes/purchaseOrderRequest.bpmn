@@ -90,7 +90,7 @@
           <camunda:formField id="FormField_dir_path" label="Input Dir" type="string" defaultValue="c://data/input" />
         </camunda:formData>
         <camunda:properties>
-          <camunda:property name="key" value="Value" />
+          <camunda:property name="uri" value="Value" />
         </camunda:properties>
       </bpmn:extensionElements>
       <bpmn:outgoing>SequenceFlow_from_start_to_read_task</bpmn:outgoing>

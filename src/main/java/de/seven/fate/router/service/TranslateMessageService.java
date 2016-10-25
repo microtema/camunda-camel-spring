@@ -9,7 +9,7 @@ import java.util.Map;
 
 @Log
 @Service
-public class MessageService implements JavaDelegate {
+public class TranslateMessageService implements JavaDelegate {
 
     @Override
     public void execute(DelegateExecution delegateExecution) throws Exception {
@@ -19,5 +19,4 @@ public class MessageService implements JavaDelegate {
     public void execute(Object body, Map<String, Object> headers) throws Exception {
         log.info("execute body&header");
     }
-
 }

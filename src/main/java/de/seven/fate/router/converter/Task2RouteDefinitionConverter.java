@@ -29,7 +29,9 @@ public class Task2RouteDefinitionConverter extends AbstractMetaConverter<RouteDe
 
         String value = delegateExpression.getValue(orig);
 
-        return meta.to(bindBean(value));
+        String uri = bindBean(value);
+
+        return meta.to(uri);
     }
 
     private String bindBean(String delegateExpression) {

@@ -43,7 +43,7 @@ public class BpmnServiceTest {
         assertNotNull(startEvent);
 
         assertEquals("StartEvent_1", startEvent.getId());
-        assertEquals("Start Event", startEvent.getName());
+        assertEquals("Message received", startEvent.getName());
     }
 
     @Test
@@ -124,7 +124,7 @@ public class BpmnServiceTest {
 
         assertNotNull(target);
         assertEquals("Task_system_task", target.getId());
-        assertEquals("System Task", target.getName());
+        assertEquals("Validate Message", target.getName());
     }
 
     @Test
@@ -162,7 +162,7 @@ public class BpmnServiceTest {
 
         assertNotNull(target);
         assertEquals("EndEvent_success", target.getId());
-        assertEquals("End Event", target.getName());
+        assertEquals("Message sended", target.getName());
     }
 
     @Test
@@ -183,7 +183,7 @@ public class BpmnServiceTest {
         assertNotNull(flowNode);
 
         assertEquals("Task_system_task", flowNode.getId());
-        assertEquals("System Task", flowNode.getName());
+        assertEquals("Validate Message", flowNode.getName());
     }
 
     @Test
@@ -213,7 +213,7 @@ public class BpmnServiceTest {
 
     private BpmnModelInstance getBpmnModelInstance() {
 
-        Resource resource = resourceLoader.getResource("classpath:/processes/simple.bpmn");
+        Resource resource = resourceLoader.getResource("classpath:/processes/validate-message.bpmn");
 
         try {
             InputStream inputStream = resource.getInputStream();

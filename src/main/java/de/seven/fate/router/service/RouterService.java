@@ -14,6 +14,9 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Log
 @Service
@@ -32,33 +35,57 @@ public class RouterService {
     @PostConstruct
     private void init() {
 
-        RouteBuilder routeBuilder = getRouteBuilder();
+        addAllRoutes();
 
+        //startAllRoutes();
+
+        log.info("Start All Routes");
+    }
+
+    private void startAllRoutes() {
         try {
-
-            camelContext.addRoutes(routeBuilder);
-
             camelContext.startAllRoutes();
-
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        log.info("Start camelContext");
     }
 
-    private RouteBuilder getRouteBuilder() {
-        return modelInstance2CamelRouterConverter.convert(getBpmnModelInstance());
+    private void addAllRoutes() {
+        getRouteBuilders().forEach(this::addRoutes);
     }
 
-    private BpmnModelInstance getBpmnModelInstance() {
+    private void addRoutes(RouteBuilder routeBuilder) {
+        try {
+            camelContext.addRoutes(routeBuilder);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-        Resource resource = resourceLoader.getResource("classpath:/processes/simple.bpmn");
+    private List<RouteBuilder> getRouteBuilders() {
+        return modelInstance2CamelRouterConverter.convertList(getBpmnModelInstances());
+    }
+
+    private BpmnModelInstance getBpmnModelInstance(Resource resource) {
 
         try {
             InputStream inputStream = resource.getInputStream();
 
             return Bpmn.readModelFromStream(inputStream);
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+
+    private List<BpmnModelInstance> getBpmnModelInstances() {
+
+        try {
+
+            Resource[] resources = resourceLoader.getResources("classpath:/processes/*-message.bpmn");
+
+            return Arrays.asList(resources).stream().map(this::getBpmnModelInstance).collect(Collectors.toList());
+
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }

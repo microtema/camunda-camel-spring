@@ -2,23 +2,23 @@
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.3.2">
   <bpmn:process id="Message_Start_Process" isExecutable="true">
     <bpmn:sequenceFlow id="SequenceFlow_from_start_to_system_task" sourceRef="StartEvent_1" targetRef="Task_system_task" />
-    <bpmn:serviceTask id="Task_system_task" name="System Task" camunda:delegateExpression="${messageService}">
+    <bpmn:serviceTask id="Task_system_task" name="Validate Message" camunda:delegateExpression="${messageService}">
       <bpmn:incoming>SequenceFlow_from_start_to_system_task</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_from_system_task_to_end_event</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:sequenceFlow id="SequenceFlow_from_system_task_to_end_event" sourceRef="Task_system_task" targetRef="EndEvent_success" />
-    <bpmn:startEvent id="StartEvent_1" name="Start Event">
+    <bpmn:startEvent id="StartEvent_1" name="Message received">
       <bpmn:outgoing>SequenceFlow_from_start_to_system_task</bpmn:outgoing>
       <bpmn:messageEventDefinition messageRef="Message_01adhjs" />
     </bpmn:startEvent>
-    <bpmn:endEvent id="EndEvent_success" name="End Event">
+    <bpmn:endEvent id="EndEvent_success" name="Message sended">
       <bpmn:incoming>SequenceFlow_from_system_task_to_end_event</bpmn:incoming>
       <bpmn:messageEventDefinition messageRef="Message_0nf387b" camunda:expression="${true}" />
     </bpmn:endEvent>
   </bpmn:process>
   <bpmn:message id="Message_0nf387b" name="seda:output" />
   <bpmn:message id="Message_01adhjs" name="file://C:/data/input" />
-  <bpmn:message id="Message_0v3mo7e" name="Message_0226h57" />
+  <bpmn:message id="Message_0v3mo7e" name="file://c:data/done" />
   <bpmn:message id="Message_0cqln8e" name="Message_3ujivrf" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Message_Start_Process">
@@ -42,13 +42,13 @@
       <bpmndi:BPMNShape id="StartEvent_065xjol_di" bpmnElement="StartEvent_1">
         <dc:Bounds x="173" y="102" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="164" y="152" width="54" height="12" />
+          <dc:Bounds x="167" y="152" width="48" height="24" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="EndEvent_0m1df6d_di" bpmnElement="EndEvent_success">
         <dc:Bounds x="508" y="102" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="501" y="154" width="50" height="12" />
+          <dc:Bounds x="484" y="154" width="84" height="12" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>

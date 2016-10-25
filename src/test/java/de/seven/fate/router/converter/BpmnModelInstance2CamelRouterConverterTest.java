@@ -79,7 +79,7 @@ public class BpmnModelInstance2CamelRouterConverterTest {
 
     private BpmnModelInstance getBpmnModelInstance() {
 
-        InputStream inputStream = BpmnModelInstance2CamelRouterConverterTest.class.getResourceAsStream("/processes/simple.bpmn");
+        InputStream inputStream = BpmnModelInstance2CamelRouterConverterTest.class.getResourceAsStream("/processes/validate-message.bpmn");
 
         return Bpmn.readModelFromStream(inputStream);
     }

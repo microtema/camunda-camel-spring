@@ -68,7 +68,7 @@ public class BpmnServiceTest {
         Message message = messageEventDefinition.getMessage();
 
         assertNotNull(message);
-        assertEquals("instantiationMessage", message.getName());
+        assertEquals("file://C:/data/input", message.getName());
     }
 
     @Test
@@ -208,7 +208,7 @@ public class BpmnServiceTest {
         Message message = messageEventDefinition.getMessage();
 
         assertNotNull(message);
-        assertEquals("instantiationMessage", message.getName());
+        assertEquals("seda:output", message.getName());
     }
 
     private BpmnModelInstance getBpmnModelInstance() {

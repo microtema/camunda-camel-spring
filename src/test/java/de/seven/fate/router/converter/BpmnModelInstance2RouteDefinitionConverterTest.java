@@ -7,6 +7,7 @@ import org.apache.camel.model.RouteDefinition;
 import org.camunda.bpm.model.bpmn.Bpmn;
 import org.camunda.bpm.model.bpmn.BpmnModelInstance;
 import org.camunda.bpm.model.bpmn.instance.StartEvent;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.InputStream;
@@ -16,20 +17,27 @@ import static org.junit.Assert.*;
 
 public class BpmnModelInstance2RouteDefinitionConverterTest {
 
-    BpmnService bpmnService = new BpmnService();
+    StartEvent2RouteDefinitionConverter sut;
 
-    BpmnModelInstance2RouteDefinitionConverter sut = new BpmnModelInstance2RouteDefinitionConverter(bpmnService);
+    BpmnService bpmnService;
 
-    BpmnModelInstance bpmnModelInstance = getBpmnModelInstance();
+    BpmnModelInstance bpmnModelInstance;
 
-    StartEvent startEvent = bpmnService.getStartEvent(bpmnModelInstance);
-
+    StartEvent startEvent;
     RouteBuilder routeBuilder = new RouteBuilder() {
         @Override
         public void configure() throws Exception {
 
         }
     };
+
+    @Before
+    public void setUp() throws Exception {
+        bpmnService = new BpmnService();
+        sut = new StartEvent2RouteDefinitionConverter(bpmnService);
+        bpmnModelInstance = getBpmnModelInstance();
+        startEvent = bpmnService.getStartEvent(bpmnModelInstance);
+    }
 
     @Test
     public void createOnNull() {

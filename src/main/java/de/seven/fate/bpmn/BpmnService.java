@@ -203,4 +203,29 @@ public class BpmnService {
             return messageEventDefinition.getMessage();
         }).collect(Collectors.toList());
     }
+
+    public List<Message> getEndEventMessages(EndEvent modelInstance) {
+
+        Collection<EventDefinition> eventDefinitions = modelInstance.getEventDefinitions();
+
+        return eventDefinitions.stream().map((eventDefinition) -> {
+            MessageEventDefinition messageEventDefinition = (MessageEventDefinition) eventDefinition;
+            return messageEventDefinition.getMessage();
+        }).collect(Collectors.toList());
+    }
+
+    public Message getEndEventMessage(EndEvent modelInstance) {
+
+        List<Message> startEventMessages = getEndEventMessages(modelInstance);
+
+        if (CollectionUtils.isEmpty(startEventMessages)) {
+            return null;
+        }
+
+        return startEventMessages.iterator().next();
+    }
+
+    public List<Task> getTasks(BpmnModelInstance modelInstance) {
+        return getModelElementsByType(modelInstance, Task.class);
+    }
 }

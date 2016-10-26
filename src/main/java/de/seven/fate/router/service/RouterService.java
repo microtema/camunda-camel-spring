@@ -37,18 +37,9 @@ public class RouterService {
 
         addAllRoutes();
 
-        //startAllRoutes();
-
         log.info("Start All Routes");
     }
 
-    private void startAllRoutes() {
-        try {
-            camelContext.startAllRoutes();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     private void addAllRoutes() {
         getRouteBuilders().forEach(this::addRoutes);

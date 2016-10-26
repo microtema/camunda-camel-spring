@@ -1,8 +1,10 @@
 package de.seven.fate.bpmn;
 
+import de.seven.fate.bpmn.enums.ExtensionPropertyType;
 import lombok.extern.java.Log;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.Validate;
 import org.camunda.bpm.model.bpmn.Bpmn;
 import org.camunda.bpm.model.bpmn.BpmnModelInstance;
 import org.camunda.bpm.model.bpmn.Query;
@@ -234,6 +236,8 @@ public class BpmnService {
     }
 
     public String getExtensionPropertyValue(BaseElement baseElement, String propertyName) {
+        Validate.notNull(baseElement);
+        Validate.notEmpty(propertyName);
 
         ExtensionElements extensionElements = baseElement.getExtensionElements();
 
@@ -249,7 +253,7 @@ public class BpmnService {
             }
         }
 
-        return null;
+        throw new IllegalArgumentException("Unable to find ExtensionPropertyValue by given propertyName: " + propertyName);
     }
 
     public String getDelegateExpression(Task task) {
@@ -259,5 +263,43 @@ public class BpmnService {
         Attribute<String> delegateExpression = (Attribute<String>) elementType.getAttribute("delegateExpression");
 
         return delegateExpression.getValue(task);
+    }
+
+    public String getEventUri(EndEvent endEvent) {
+
+        Message message = getEndEventMessage(endEvent);
+
+        if (message != null) {
+            return message.getName();
+        }
+
+        return getExtensionPropertyValue(endEvent, ExtensionPropertyType.URI);
+    }
+
+    public String getEventUri(StartEvent startEvent) {
+
+        Message message = getStartEventMessage(startEvent);
+
+        if (message != null) {
+            return message.getName();
+        }
+
+        return getExtensionPropertyValue(startEvent, ExtensionPropertyType.URI);
+    }
+
+    public String getEventId(StartEvent startEvent) {
+
+        return getExtensionPropertyValue(startEvent, ExtensionPropertyType.ID);
+    }
+
+    private String getExtensionPropertyValue(BaseElement startEvent, ExtensionPropertyType propertyType) {
+        Validate.notNull(startEvent);
+        Validate.notNull(propertyType);
+
+        String uri = getExtensionPropertyValue(startEvent, propertyType.getName());
+
+        Validate.notEmpty(uri);
+
+        return uri;
     }
 }

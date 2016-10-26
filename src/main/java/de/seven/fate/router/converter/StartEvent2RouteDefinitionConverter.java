@@ -4,7 +4,7 @@ import de.seven.fate.bpmn.BpmnService;
 import de.seven.fate.converter.AbstractMetaConverter;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.RouteDefinition;
-import org.camunda.bpm.model.bpmn.instance.Message;
+import org.apache.commons.lang.Validate;
 import org.camunda.bpm.model.bpmn.instance.StartEvent;
 import org.springframework.stereotype.Component;
 
@@ -23,10 +23,12 @@ public class StartEvent2RouteDefinitionConverter extends AbstractMetaConverter<R
             return null;
         }
 
-        Message message = bpmnService.getStartEventMessage(orig);
-        String uri = message.getName();
+        Validate.notNull(meta);
+
+        String uri = bpmnService.getEventUri(orig);
 
         return meta.from(uri);
     }
+
 
 }

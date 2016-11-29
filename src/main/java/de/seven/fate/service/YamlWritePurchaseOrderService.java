@@ -1,7 +1,7 @@
 package de.seven.fate.service;
 
 
-import de.seven.fate.converter.Converter;
+import com.e2open.model.converter.Converter;
 import de.seven.fate.converter.yaml.PurchaseOrderDto2YamlFileConverter;
 import de.seven.fate.dto.PurchaseOrderDto;
 import de.seven.fate.model.PurchaseOrder;

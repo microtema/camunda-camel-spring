@@ -1,6 +1,6 @@
 package de.seven.fate.service;
 
-import de.seven.fate.converter.Converter;
+import com.e2open.model.converter.Converter;
 import de.seven.fate.model.PurchaseOrder;
 import de.seven.fate.vo.PurchaseOrderVo;
 import lombok.extern.java.Log;

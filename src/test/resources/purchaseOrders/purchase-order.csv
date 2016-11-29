@@ -1,9 +1,9 @@
 1000,Tema,7fate@web.de,0001,Drone,2,59.99,true
 1000,Tema,7fate@web.de,0002,Wakeboard,1,800.99,true
 1000,Tema,7fate@web.de,0003,Kite,1,1200.99,true
-1000,Tema,7fate@web.de,0004,Naked Bike,1,5000.00,false
+1000,Tema,7fate@web.de,0004,Naked Bike,1,5000.00,true
 2000,Foo,foo@web.de,0001,Drone,1,59.99,true
-2000,Foo,foo@web.de,0002,Wakeboard,1,800.99,false
+2000,Foo,foo@web.de,0002,Wakeboard,1,800.99,true
 2000,Foo,foo@web.de,0003,Kite,1,1200.99,true
 2000,Foo,foo@web.de,0004,Naked Bike,1,5000.00,true
 3000,Bar,bar@web.de,0004,Naked Bike,1,5000.00,true

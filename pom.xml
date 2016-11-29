@@ -24,6 +24,8 @@
         <java.version>1.8</java.version>
         <version.camunda>7.6.0-alpha2</version.camunda>
         <commons.beanutils.version>1.9.2</commons.beanutils.version>
+        <model.builder.version>1.0.2-SNAPSHOT</model.builder.version>
+        <model.converter.version>1.0.2-SNAPSHOT</model.converter.version>
     </properties>
 
     <dependencyManagement>
@@ -107,29 +109,44 @@
         </dependency>
 
         <dependency>
-            <groupId>de.seven.fate</groupId>
+            <groupId>com.e2open.model.converter</groupId>
             <artifactId>model-converter-api</artifactId>
-            <version>1.0.2-SNAPSHOT</version>
+            <version>${model.converter.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>de.seven.fate</groupId>
-            <artifactId>model-builder</artifactId>
-            <version>1.0.2-SNAPSHOT</version>
+            <groupId>com.e2open.model.converter</groupId>
+            <artifactId>model-converter-bpmn</artifactId>
+            <version>${model.converter.version}</version>
             <exclusions>
                 <exclusion>
-                    <groupId>commons-beanutils</groupId>
-                    <artifactId>commons-beanutils</artifactId>
+                    <groupId>org.apache.camel</groupId>
+                    <artifactId>camel-core</artifactId>
                 </exclusion>
                 <exclusion>
-                    <groupId>javax.validation</groupId>
-                    <artifactId>validation-api</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.commons</groupId>
-                    <artifactId>commons-lang3</artifactId>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-context</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>com.e2open.model.converter</groupId>
+            <artifactId>model-converter-csv</artifactId>
+            <version>${model.converter.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.e2open.model.converter</groupId>
+            <artifactId>model-converter-dsl</artifactId>
+            <version>${model.converter.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.e2open.model.builder</groupId>
+            <artifactId>model-builder</artifactId>
+            <version>${model.builder.version}</version>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
@@ -178,6 +195,10 @@
             <id>camunda-bpm-nexus</id>
             <name>camunda-bpm-nexus</name>
             <url>https://app.camunda.com/nexus/content/groups/public</url>
+        </repository>
+        <repository>
+            <id>E2open US repository</id>
+            <url>https://artifactory.dev.e2open.com/artifactory/libs-n-dev</url>
         </repository>
     </repositories>
 

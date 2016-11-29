@@ -1,5 +1,6 @@
 package de.seven.fate.converter;
 
+import com.e2open.model.converter.AbstractConverter;
 import de.seven.fate.dto.AddressDto;
 import de.seven.fate.model.Address;
 import org.springframework.stereotype.Component;

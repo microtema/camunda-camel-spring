@@ -1,7 +1,7 @@
 package de.seven.fate.converter.json;
 
+import com.e2open.model.converter.AbstractMetaConverter;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.seven.fate.converter.AbstractMetaConverter;
 import de.seven.fate.dto.PurchaseOrderDto;
 import org.apache.camel.util.FileUtil;
 import org.springframework.stereotype.Component;

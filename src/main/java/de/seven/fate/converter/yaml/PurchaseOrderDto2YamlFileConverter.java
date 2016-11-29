@@ -1,6 +1,6 @@
 package de.seven.fate.converter.yaml;
 
-import de.seven.fate.converter.AbstractMetaConverter;
+import com.e2open.model.converter.AbstractMetaConverter;
 import de.seven.fate.dto.PurchaseOrderDto;
 import org.springframework.stereotype.Component;
 import org.yaml.snakeyaml.Yaml;

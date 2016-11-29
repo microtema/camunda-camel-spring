@@ -1,7 +1,7 @@
 package de.seven.fate.converter.xml;
 
+import com.e2open.model.converter.AbstractConverter;
 import de.seven.fate.common.service.JAXBContextService;
-import de.seven.fate.converter.AbstractConverter;
 import de.seven.fate.dto.PurchaseOrderDto;
 import org.springframework.stereotype.Component;
 

@@ -1,5 +1,6 @@
 package de.seven.fate.converter;
 
+import com.e2open.model.converter.AbstractConverter;
 import de.seven.fate.model.PurchaseItem;
 import de.seven.fate.vo.PurchaseOrderVo;
 import org.apache.commons.lang.Validate;

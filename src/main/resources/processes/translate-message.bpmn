@@ -13,6 +13,13 @@
     </bpmn:startEvent>
     <bpmn:sequenceFlow id="SequenceFlow_1ny2dlw" sourceRef="StartEvent_1" targetRef="Task_0fhzzcm" />
     <bpmn:serviceTask id="Task_0fhzzcm" name="Translate Message" camunda:delegateExpression="${translateMessageService}">
+      <bpmn:extensionElements>
+        <camunda:properties>
+          <camunda:property name="CAMEL_DSL_TYPE" value="MessageFilter" />
+          <camunda:property name="bean" value="messageService" />
+          <camunda:property name="method" value="execute" />
+        </camunda:properties>
+      </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_1ny2dlw</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_15ch5l3</bpmn:outgoing>
     </bpmn:serviceTask>
